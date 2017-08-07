@@ -78,5 +78,9 @@ Time <- c(9172, 10997, 11453 ,11515, 11613, 11779, 12072)
 F3_data <- list(N = N,m = 88,n = 7,Y = y,jj = jj,kk = kk, t = Time)
 
 library(rstan)
+
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+
 fit <- stan(file = "/Users/pro/Projects/Pipelines/Simple/Simple_Model1.stan", data = F3_data, iter = 10000, control = list(max_treedepth = 15))
 summary(fit)$summary[1:3,]
