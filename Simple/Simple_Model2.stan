@@ -47,3 +47,4 @@ model {
     y[i] ~ normal(0.25-beta[Rowy[i]]*(T[Coly[i]] - 7347)/365, sigma);
   }
 }
+

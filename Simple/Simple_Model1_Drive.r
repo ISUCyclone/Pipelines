@@ -82,5 +82,5 @@ library(rstan)
 rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
 
-fit <- stan(file = "/Users/pro/Projects/Pipelines/Simple/Simple_Model1.stan", data = F3_data, iter = 10000, control = list(max_treedepth = 15))
-summary(fit)$summary[1:3,]
+fit1 <- stan(file = "/Users/pro/Projects/Pipelines/Simple/Simple_Model1.stan", data = F3_data, iter = 10000, control = list(max_treedepth = 15))
+summary(fit1)$summary[1:3,]
