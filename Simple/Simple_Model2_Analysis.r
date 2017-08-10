@@ -114,3 +114,24 @@ failure.prob.upper.lognormal <- qnorm(failure.prob.upper)
 failure.prob.lower10.lognormal <- qnorm(failure.prob.lower10)
 failure.prob.upper10.lognormal <- qnorm(failure.prob.upper10)
 
+SplidaOptions(SPLIDA.DateOnPlot)
+probpaper("Lognormal", x.range = c(4,30), title.option = "blank",
+          grid = FALSE, cex = 1.4, cex.labs = 1.4, cex.tic.lab = 1.4,
+          y.range = c(1/10000, 0.2),
+          xlab = "Years Since Pipeline Installation (Feb 1990)",
+          ylab = "Fraction Failing")
+lines(log(x), failure.prob.mean.lognormal, col = "blue",
+      lwd = 2.5, lty = 1)
+lines(log(x), failure.prob.lower.lognormal, col = "deeppink",
+      lwd = 2.5, lty = 2)
+lines(log(x), failure.prob.upper.lognormal, col = "deeppink",
+      lwd = 2.5, lty = 2)
+lines(log(x), failure.prob.lower10.lognormal, col = "green",
+      lwd = 2.5, lty = 3)
+lines(log(x), failure.prob.upper10.lognormal, col = "green",
+      lwd = 2.5, lty = 3)
+
+legend("topleft",
+       legend = c("Cdf Estimate","95% Credible Intervals","80% Credible Intervals"),
+       col = c("blue","deeppink","green"), lty = c(1,2,3),
+       merge = TRUE, border = c(0,0,1,0), lwd = c(2.5, 2.5, 2.5))
