@@ -1,7 +1,7 @@
 # Page 9, Figure 4
 #******************************
 pmean <- get_posterior_mean(fit2)
-slope <- pmean[7:94]
+slope <- pmean[7:94,5]
 dates <- date::as.date(c("12Feb90","11Feb95","10Feb2000","11May2001",
                          "12Jul2001","18Oct2001","2Apr2002","20Jan2003",
                          "1Jan2004","1Jan2006","1Jan2007","1Jan2008",
@@ -76,3 +76,41 @@ abline(v = 12072, lwd = 0.5, col = "grey",lty = 2)
 abline(v = 9172, lwd = 0.5, col = "grey",lty = 2)
 mtext("Quadrant 4 (left)", side = 3, line = 1, cex = 1.2)
 mtext("Date", side = 1, line = 3.8, cex = 0.8)
+
+# Page 10, Figure 5
+#******************************
+mubeta1 <- pmean[1,5]
+sigmabeta <- pmean[5,5]
+sigma <- pmean[6,5]
+
+day0 <- 7347
+day.seq <- seq(from = day0, to = day0 + 365*30, by = 10)
+
+post2 <- as.array(fit2)
+iter <- dim(post2)[1]
+post2 <- rbind(post2[,1,],post2[,2,],post2[,3,],post2[,4,]) # Merge 4 chains
+
+samplesize = 1000
+index <- sample(1:(4*iter), samplesize)
+post2.sub <- post2[index,]
+
+failure.prob <- matrix(nrow = length(index), ncol = length(day.seq))
+
+for(i in 1:length(index)){
+  mcmc.mu.beta <- post2.sub[i, 1]
+  mcmc.sigma.beta <- post2.sub[i, 5]
+  failure.prob[i,] <- pnorm((log((day.seq - 7347)/365) - log(0.2) + mcmc.mu.beta)/mcmc.sigma.beta)
+}
+
+failure.prob.mean <- colMeans(failure.prob)
+failure.prob.lower <- apply(failure.prob, 2, quantile, probs = 0.025)
+failure.prob.upper <- apply(failure.prob, 2, quantile, probs = 0.975)
+failure.prob.lower10 <- apply(failure.prob, 2, quantile, probs = 0.1)
+failure.prob.upper10 <- apply(failure.prob, 2, quantile, probs = 0.9)
+
+failure.prob.mean.lognormal <- qnorm(failure.prob.mean)
+failure.prob.lower.lognormal <- qnorm(failure.prob.lower)
+failure.prob.upper.lognormal <- qnorm(failure.prob.upper)
+failure.prob.lower10.lognormal <- qnorm(failure.prob.lower10)
+failure.prob.upper10.lognormal <- qnorm(failure.prob.upper10)
+
