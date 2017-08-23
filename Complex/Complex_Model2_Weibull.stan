@@ -32,7 +32,6 @@ transformed parameters {
   
   shape = pi()/(6*sigmalogBeta)^(0.5);
   scale = medianBeta/(log(2))^(1/shape);
-  
 }
 
 model {

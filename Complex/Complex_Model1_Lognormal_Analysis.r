@@ -31,9 +31,9 @@ Y=structure(.Data=c(
 thickness.fitted.measure <- matrix(Y, 33,4, byrow=T)
 
 # Soft failure
-Df.elbow <- mean(Y[1:12,1])*.3; Df.elbow 
-Df.pipe <- mean(Y[13:28,1])*.3; Df.pipe
-Df.tee <- mean(Y[29:33,1])*.3; Df.tee
+Df.elbow <- mean(Y[1:12,1])*.2; Df.elbow 
+Df.pipe <- mean(Y[13:28,1])*.2; Df.pipe
+Df.tee <- mean(Y[29:33,1])*.2; Df.tee
 
 library(date)
 date.tmpt <- as.date(c("1apr2000","1nov2000","1jul2001","1jan2004", "1jan2025"),order="dmy")
@@ -89,7 +89,7 @@ failure.prob.pipe.mean <- colMeans(failure.prob.pipe, na.rm = FALSE, dims = 1)
 failure.prob.tee.mean <- colMeans(failure.prob.tee, na.rm = FALSE, dims = 1)
 
 # Figure 14, (a)
-
+#****************************
 failure.prob.elbow.lower<- apply(failure.prob.elbow, 2, quantile, probs=0.025)
 failure.prob.elbow.upper<- apply(failure.prob.elbow, 2, quantile, probs=0.975)
 failure.prob.elbow.lower10<- apply(failure.prob.elbow, 2, quantile, probs=0.1)
@@ -112,7 +112,7 @@ lty=c(1,2,4), merge=TRUE , border=c(0,0,1,0), lwd=c(2.5, 2.5, 2.5),cex=0.7)
 mtext("TML Component: Elbow", line=1)
 
 # Figure 14, (b)
-
+#****************************
 failure.prob.pipe.lower<- apply(failure.prob.pipe, 2, quantile, probs=0.025)
 failure.prob.pipe.upper<- apply(failure.prob.pipe, 2, quantile, probs=0.975)
 failure.prob.pipe.lower10<- apply(failure.prob.pipe, 2, quantile, probs=0.1)
@@ -134,7 +134,7 @@ lty=c(1,2,4), merge=TRUE , border=c(0,0,1,0), lwd=c(2.5, 2.5, 2.5),cex=0.7)
 mtext("TML Component: Pipe", line=1)
 
 # Figure 14, (c)
-
+#****************************
 failure.prob.tee.lower<- apply(failure.prob.tee, 2, quantile, probs=0.025)
 failure.prob.tee.upper<- apply(failure.prob.tee, 2, quantile, probs=0.975)
 failure.prob.tee.lower10<- apply(failure.prob.tee, 2, quantile, probs=0.1)
@@ -155,7 +155,47 @@ lty=c(1,2,4), merge=TRUE , border=c(0,0,1,0), lwd=c(2.5, 2.5, 2.5),cex=0.7)
 
 mtext("TML Component: Tee", line=1)
 
+# Page 23, Figure 13
+#****************************
+markyear <- seq(0,25,by = 5)
+markday <- markyear*365+t.seq[1]
+
+par(mfrow = c(2,2), mgp = c(4,1,0), mar = c(5,7,4,2))
+plot(t.seq, failure.prob.elbow.mean, xlab = "Years After Installation",ylab = "Probability",
+     type = "n", xaxt = "n",xlim = c(min(markday), max(markday)), ylim = c(0,0.6))
+lines(t.seq, failure.prob.elbow.mean, col = "blue", lty = 2)
+axis(1,at =  markday,labels =  markyear)
+
+fprob.elbow.weibull <- read.table("failure.prob.elbow.weibull.csv", sep = ",")
+fprob.elbow.mean.weibull <- colMeans(fprob.elbow.weibull, na.rm = FALSE, dims = 1)
+lines(t.seq, fprob.elbow.mean.weibull, col = "red", lty = 3)
+mtext("TML Component Elbow",cex = 0.7)
+legend("topleft",cex = 0.6,bty = "n",lty = c(2,3), col = c("blue", "red"), c("Lognormal Corrosion Rate","Weibull Corrosion Rate"),box.lwd = 0.5)
+
+plot(t.seq, failure.prob.pipe.mean, xlab = "Years After Installation",ylab = "Probability",
+     type = "n", xaxt = "n",xlim = c(min(markday), max(markday)), ylim = c(0,0.6))
+lines(t.seq, failure.prob.pipe.mean, col = "blue", lty = 2)
+axis(1,at =  markday,labels =  markyear)
+
+fprob.pipe.weibull <- read.table("failure.prob.pipe.weibull.csv", sep = ",")
+fprob.pipe.mean.weibull <- colMeans(fprob.pipe.weibull, na.rm = FALSE, dims = 1)
+lines(t.seq, fprob.pipe.mean.weibull, col = "red", lty = 3)
+mtext("TML Component Pipe",cex = 0.7)
+legend("topleft",cex = 0.6,bty = "n",lty = c(2,3), col = c("blue", "red"), c("Lognormal Corrosion Rate","Weibull Corrosion Rate"),box.lwd = 0.5)
+
+plot(t.seq, failure.prob.tee.mean, xlab = "Years After Installation",ylab = "Probability",
+     type = "n", xaxt = "n",xlim = c(min(markday), max(markday)), ylim = c(0,0.6))
+lines(t.seq, failure.prob.tee.mean, col = "blue", lty = 2)
+axis(1,at =  markday,labels =  markyear)
+
+fprob.tee.weibull <- read.table("failure.prob.tee.weibull.csv", sep = ",")
+fprob.tee.mean.weibull <- colMeans(fprob.tee.weibull, na.rm = FALSE, dims = 1)
+lines(t.seq, fprob.tee.mean.weibull, col = "red", lty = 3)
+mtext("TML Component Pipe",cex = 0.7)
+legend("topleft",cex = 0.6,bty = "n",lty = c(2,3), col = c("blue", "red"), c("Lognormal Corrosion Rate","Weibull Corrosion Rate"),box.lwd = 0.5)
+
 # Page 26, Figure 16
+#****************************
 # Remaining Life Time of the Current Circuit
 tc <- 12418
 t.seq.new <- seq(from=tc, to=tc+365*20,by=10)
@@ -274,7 +314,48 @@ lty=c(1,2,3), merge=TRUE , border=c(0,0,1,0), lwd=c(2.5, 2.5, 2.5),cex=0.7)
 
 mtext("TML Component: Tee", line=1)
 
+# Page 25, Figure 15
+#****************************
+markyear <- seq(0,25,by = 5)
+markday <- markyear*365+t.seq.new[1]
+
+par(mfrow = c(2,2), mgp = c(4,1,0), mar = c(5,7,4,2))
+plot(t.seq.new, remaining.life.time.mean.elbow, xlab = "Years After the Last Inspection",ylab = "Probability",
+     type = "n", xaxt = "n",xlim = c(min(markday), max(markday)), ylim = c(0,0.6))
+lines(t.seq.new, remaining.life.time.mean.elbow, col = "blue", lty = 2)
+axis(1,at =  markday[-6],labels =  markyear[-6])
+
+rlt.elbow.weibull <- read.table("remaining.life.time.elbow.weibull.csv", sep = ",")
+rlt.elbow.mean.weibull <- colMeans(rlt.elbow.weibull, na.rm = FALSE, dims = 1)
+lines(t.seq.new, rlt.elbow.mean.weibull, col = "red", lty = 3)
+mtext("TML Component Elbow",cex = 0.7)
+legend("bottomright",cex = 0.6,bty = "n",lty = c(2,3), col = c("blue", "red"), c("Lognormal Corrosion Rate","Weibull Corrosion Rate"),box.lwd = 0.5)
+
+plot(t.seq.new, remaining.life.time.mean.pipe, xlab = "Years After the Last Inspection",ylab = "Probability",
+     type = "n", xaxt = "n",xlim = c(min(markday), max(markday)), ylim = c(0,0.6))
+lines(t.seq.new, remaining.life.time.mean.pipe, col = "blue", lty = 2)
+axis(1,at =  markday[-6],labels =  markyear[-6])
+
+rlt.pipe.weibull <- read.table("remaining.life.time.pipe.weibull.csv", sep = ",")
+rlt.pipe.mean.weibull <- colMeans(rlt.pipe.weibull, na.rm = FALSE, dims = 1)
+lines(t.seq.new, rlt.pipe.mean.weibull, col = "red", lty = 3)
+mtext("TML Component Pipe",cex = 0.7)
+legend("bottomright",cex = 0.6,bty = "n",lty = c(2,3), col = c("blue", "red"), c("Lognormal Corrosion Rate","Weibull Corrosion Rate"),box.lwd = 0.5)
+
+
+plot(t.seq.new, remaining.life.time.mean.tee, xlab = "Years After the Last Inspection",ylab = "Probability",
+     type = "n", xaxt = "n",xlim = c(min(markday), max(markday)), ylim = c(0,0.6))
+lines(t.seq.new, remaining.life.time.mean.tee, col = "blue", lty = 2)
+axis(1,at =  markday[-6],labels =  markyear[-6])
+
+rlt.tee.weibull <- read.table("remaining.life.time.tee.weibull.csv", sep = ",")
+rlt.tee.mean.weibull <- colMeans(rlt.tee.weibull, na.rm = FALSE, dims = 1)
+lines(t.seq.new, rlt.tee.mean.weibull, col = "red", lty = 3)
+mtext("TML Component Tee",cex = 0.7)
+legend("bottomright",cex = 0.6,bty = "n",lty = c(2,3), col = c("blue", "red"), c("Lognormal Corrosion Rate","Weibull Corrosion Rate"),box.lwd = 0.5)
+
 # Page 27, Figure 17
+#****************************
 # Elbow
 remaining.life.time <- remaining.life.time.elbow
 p <- c(0.1, 0.2, 0.3, 0.4)
@@ -291,9 +372,6 @@ for (i in 1: dim(remaining.life.time)[1]) {
 
 t.out.pstar1.elbow <- t.out
 
-#################
-
-
 t.out  <- NULL
 for (i in 1: dim(remaining.life.time)[1]) {
   diff0<- abs(remaining.life.time[i,]-p.star[2])
@@ -304,8 +382,6 @@ for (i in 1: dim(remaining.life.time)[1]) {
 
 t.out.pstar2.elbow <- t.out
 
-
-#################
 t.out  <- NULL
 for (i in 1: dim(remaining.life.time)[1]) {
   diff0<- abs(remaining.life.time[i,]-p.star[3])
@@ -316,7 +392,6 @@ for (i in 1: dim(remaining.life.time)[1]) {
 
 t.out.pstar3.elbow <- t.out
 
-#################
 t.out  <- NULL
 for (i in 1: dim(remaining.life.time)[1]) {
   diff0<- abs(remaining.life.time[i,]-p.star[4])
@@ -346,9 +421,6 @@ for (i in 1: dim(remaining.life.time)[1]) {
 
 t.out.pstar1.pipe <- t.out
 
-#################
-
-
 t.out  <- NULL
 for (i in 1: dim(remaining.life.time)[1]) {
   diff0<- abs(remaining.life.time[i,]-p.star[2])
@@ -359,8 +431,6 @@ for (i in 1: dim(remaining.life.time)[1]) {
 
 t.out.pstar2.pipe <- t.out
 
-
-#################
 t.out  <- NULL
 for (i in 1: dim(remaining.life.time)[1]) {
   diff0<- abs(remaining.life.time[i,]-p.star[3])
@@ -371,7 +441,6 @@ for (i in 1: dim(remaining.life.time)[1]) {
 
 t.out.pstar3.pipe <- t.out
 
-#################
 t.out  <- NULL
 for (i in 1: dim(remaining.life.time)[1]) {
   diff0<- abs(remaining.life.time[i,]-p.star[4])
@@ -385,12 +454,10 @@ t.out.pstar4.pipe <- t.out
 # Tee
 remaining.life.time <- remaining.life.time.tee
 
-
 p <- c(0.1, 0.2, 0.3, 0.4)
 M <- 100
 
 p.star <- 1-(1-p)^(1/M)
-
 
 t.out  <- NULL
 for (i in 1: dim(remaining.life.time)[1]) {
@@ -402,9 +469,6 @@ for (i in 1: dim(remaining.life.time)[1]) {
 
 t.out.pstar1.tee <- t.out
 
-#################
-
-
 t.out  <- NULL
 for (i in 1: dim(remaining.life.time)[1]) {
   diff0<- abs(remaining.life.time[i,]-p.star[2])
@@ -415,8 +479,6 @@ for (i in 1: dim(remaining.life.time)[1]) {
 
 t.out.pstar2.tee <- t.out
 
-
-#################
 t.out  <- NULL
 for (i in 1: dim(remaining.life.time)[1]) {
   diff0<- abs(remaining.life.time[i,]-p.star[3])
@@ -427,7 +489,6 @@ for (i in 1: dim(remaining.life.time)[1]) {
 
 t.out.pstar3.tee <- t.out
 
-#################
 t.out  <- NULL
 for (i in 1: dim(remaining.life.time)[1]) {
   diff0<- abs(remaining.life.time[i,]-p.star[4])
@@ -499,3 +560,172 @@ abline(h=0, col="grey")
 abline(h=1, col="grey")
 abline(h=2, col="grey")
 abline(h=3, col="grey")
+
+# Page 20, Figure 10
+#****************************
+index1 <- sample(32000, 150)
+beta.sub <- as.data.frame(beta[index1,])
+colnames(beta.sub) <- c(1:33)
+boxplot(beta.sub, ylab = expression(paste("Corrosion Rate: ","\u03b2"[1[i]])), xlab = "TML Number",ylim = c(0,0.25), col = "yellow")
+
+# Page 21, Figure 11
+#****************************
+ydate <- as.date(c("1Apr2000","1Nov2000","1Jul2001","1Jan2004","1Jan2006","1Jan2008","1Jan2010","1Jan2012","1Jan2014"))
+yday <- julian(as.Date(ydate,"%d%b%Y"))
+init.sub <- as.data.frame(init[index1,])
+colnames(init.sub) <- c(1:33)
+boxplot(init.sub, yaxt = "n",ylab = expression(paste("Initiation Time: ","T"[I[i]])), xlab = "TML Number", ylim = c(10500,16500), col = "yellow")
+axis(side = 2, yday, ydate,cex.axis = 0.6)
+
+# Page 13, Figure 7
+#****************************
+Date = NULL;Thickness = NULL;TML = NULL
+
+for(i in 1:33){
+  for(j in 1:4){
+    Date <- c(Date, JulianDate[j])
+    TML <- c(TML, i)
+    Thickness <- c(Thickness, thickness.fitted.measure[i,j])
+  }
+}
+
+thick.data.frame <- data.frame(Date = Date, Thickness = Thickness, TML = as.factor(TML))
+
+mypanel1 <- function(x,y){
+  panel.lines(x,y)
+  panel.points(x,y,col = as.factor(x),pch =16)
+}
+
+xyplot(data = thick.data.frame, Thickness~ Date|TML,ylab = "Wall Thickness",panel = mypanel1,
+       scales = list(x = list(at = Date[1:4], labels = date.tmpt[-5], rot = 90, cex = 0.6)),
+       key=list(space="right",lines=list(col=c("black","red","green","blue"),type = "p", pch = 16),
+                text=list(c("Apr2000","Nov2000","Jul2001","Jan2004"))))
+
+# Page 18, Figure 8
+#*************************
+pmean <- get_posterior_mean(fit3)[,5]
+#initial.time <- pmean[76:108]
+initial.time <- apply(init,2,median)
+
+# Assume that all the corrosions(if started) are between the 3rd and 4th inspections.
+# If not, changes should be made for the "TMLs with Initiation"
+
+wi <- which((initial.time - JulianDate[4])<0)
+woi <- c(1:33)[-wi]
+# Without Initiation
+thick.no.init <- thickness.fitted.measure[woi,]
+
+Date = NULL;Thickness = NULL;TML = NULL;InitTime = NULL; 
+CorrRate = NULL; InitThick = NULL;
+
+#initial.time.woi <- initial.time[woi]
+initial.time.woi <- initial.time[woi]
+corrosion.rate.woi <- beta.mean[woi]
+#initial.thick.woi <- thickness.init.mean[woi]
+initial.thick.woi <- apply(thickness.init,2,median)[woi]
+
+for(i in 1:length(woi)){
+  for(j in 1:4){
+    Date <- c(Date, JulianDate[j])
+    TML <- c(TML, woi[i])
+    Thickness <- c(Thickness, thick.no.init[i,j])
+  }
+}
+
+thick.no.init.data.frame <- data.frame(Date = Date,Thickness = Thickness,TML = as.factor(TML))
+
+
+fit.date <- c("1Jan2004","1Jan2006","1Jan2008","1Jan2010","1Jan2012","1Jan2014")
+fit.date.date <- date::as.date(fit.date)
+fit.day <- julian(as.Date(fit.date.date))
+xyplot(data = thick.no.init.data.frame, Thickness~Date|TML, ylab = "Fitted Wall Thickness",
+       xlab = "Date", main = "TMLs without Initiation",
+       xlim = c(11000, 16300), ylim = c(0, 0.6),
+       scales = list(x = list(at = fit.day, labels = fit.date, rot = 90, cex = 0.6)),
+       panel = function(x,y){
+         panel.lines(x,y)
+         panel.points(x,y, col = c("black","red","green","blue"),pch = 16, cex = 0.6)
+         panel.points(initial.time.woi[panel.number()],
+                      initial.thick.woi[panel.number()],pch = 4, col = "deeppink", cex = 0.6)
+         panel.lines(c(x[4],initial.time.woi[panel.number()]),c(y[4],initial.thick.woi[panel.number()]))
+         panel.abline(h = 0.2*initial.thick.woi[panel.number()], lty = 3, col = "blue")
+         lastfit <- initial.thick.woi[panel.number()] - (16071 - initial.time.woi[panel.number()])/365 * corrosion.rate.woi[panel.number()]
+         panel.lines(c(initial.time.woi[panel.number()],16071),c(initial.thick.woi[panel.number()], lastfit),
+                     lty = 3,col = "grey")
+       },
+       key=list(space="right",lines=list(col=c("black","red","green","blue","deeppink"),type = "p", pch = c(16,16,16,16,4),cex = 0.75),
+                text=list(c("Apr2000","Nov2000","Jul2001","Jan2004","Estimated Initiation"),cex = 0.75)
+                )
+       )
+
+# With Initiation
+thick.with.init <- thickness.fitted.measure[wi,]
+Date = NULL;Thickness = NULL;TML = NULL;InitTime = NULL; 
+CorrRate = NULL; InitThick = NULL;
+
+initial.time.wi <- initial.time[wi]
+corrosion.rate.wi <- beta.mean[wi]
+initial.thick.wi <- apply(thickness.init,2,median)[wi]
+
+for(i in 1:length(wi)){
+  for(j in 1:4){
+    Date <- c(Date, JulianDate[j])
+    TML <- c(TML, wi[i])
+    Thickness <- c(Thickness, thick.with.init[i,j])
+  }
+}
+
+thick.with.init.data.frame <- data.frame(Date = Date,Thickness = Thickness,TML = as.factor(TML))
+
+fit.date <- c("1Jan2004","1Jan2006","1Jan2008","1Jan2010","1Jan2012","1Jan2014")
+fit.date.date <- date::as.date(fit.date)
+fit.day <- julian(as.Date(fit.date.date))
+
+xyplot(data = thick.with.init.data.frame, Thickness~Date|TML, ylab = "Fitted Wall Thickness",
+       xlab = "Date", main = "TMLs with Initiation",
+       xlim = c(11000, 16300), ylim = c(0, 0.6),
+       scales = list(x = list(at = fit.day, labels = fit.date, rot = 90, cex = 0.6)),
+       panel = function(x,y){
+         itime <- initial.time.wi[panel.number()]
+         ithick <- initial.thick.wi[panel.number()]
+         panel.lines(c(x[-4],itime),c(y[-4],ithick))
+         lastfit <- ithick - (16071 - itime)/365 * corrosion.rate.wi[panel.number()]
+         panel.lines(c(itime,16071),c(ithick, lastfit),
+                     lty = 3,col = "grey")
+         panel.points(x,y,col = c("black","red","green","blue"), pch = 16, cex = 0.6)
+         panel.points(itime,ithick,pch = 4, col = "deeppink", cex = 0.6)
+         panel.abline(h = 0.2*initial.thick.wi[panel.number()], lty = 3, col = "blue")
+         },
+       key=list(space="right",lines=list(col=c("black","red","green","blue","deeppink"),type = "p", pch = c(16,16,16,16,4),cex = 0.75),
+                text=list(c("Apr2000","Nov2000","Jul2001","Jan2004","Estimated Initiation"),cex = 0.75)
+       )
+)
+
+# Page 22, Figure 12
+#****************************
+date.axis <- c("1Apr2000","1Nov2000","1Jun2001","1Jan2004","1Jan2006",
+               "1Jan2008")
+day.axis <- date::as.date(date.axis)
+day.axis <- julian(as.Date(day.axis))
+
+density.model <- apply(init[sample(dim(init)[1],1000),],2,density,width = 600)
+
+par(las = 1, mgp = c(4,1,0), mar = c(6,7,4,2))
+plot(density.model[[1]]$x,density.model[[1]]$y, xlim = c(10500,14000), ylim = c(0,0.002),type = "n",
+     xlab = "Date", ylab = "Density",xaxt = "n")
+axis(1, at=day.axis, labels = c("1Apr00","1Nov00","1Jun01","1Jan04","1Jan06",
+                                "1Jan08"), las = 2,cex = 0.5)
+legend(x = 12418, y = 0.002, c("TMLs with Initiation", "TMLs without Initiation"), lty = c(1,3), col = c("blue","red"), cex = 0.6)
+for(i in 1:dim(init)[2]){
+  type = i %in% wi
+  if(type){
+    ltype = 1
+    color = "blue"
+  }
+  else {
+    ltype = 3
+    color = "red"
+  }
+  lines(density.model[[i]]$x,density.model[[i]]$y, lty = ltype,
+        col = color)
+}

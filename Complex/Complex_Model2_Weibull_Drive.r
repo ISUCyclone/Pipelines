@@ -23,5 +23,5 @@ library(rstan)
 rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
 
-fit_w2 <- stan(file = "/Users/pro/Projects/Pipelines/Complex/Complex_Model2_Weibull.stan",data = Q1_data,iter = 20000,warmup = 5000,thin = 10,chains = 4,control = list(adapt_delta = 0.98,max_treedepth = 12))
-summary(fit_w2)$summary[1:9,]
+fit4 <- stan(file = "/Users/pro/Projects/Pipelines/Complex/Complex_Model2_Weibull.stan",data = Q1_data,iter = 80000,warmup = 8000,thin = 100,chains = 4,control = list(adapt_delta = 0.98,max_treedepth = 12))
+summary(fit4)$summary[1:9,]
