@@ -24,5 +24,5 @@ library(rstan)
 rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
 
-fit3 <- stan(file = "/Users/pro/Projects/Pipelines/Complex/Complex_Model1_Lognormal.stan",iter = 2000,warmup = 1000,control = list(adapt_delta = 0.95,max_treedepth = 12),data = Q1_data)
+fit3 <- stan(file = "/Users/pro/Projects/Pipelines/Complex/Complex_Model1_Lognormal.stan",iter = 80000,warmup = 8000, thin = 100,control = list(adapt_delta = 0.95,max_treedepth = 12),data = Q1_data)
 summary(fit3)$summary[c(1:9,109),]
