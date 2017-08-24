@@ -20,7 +20,7 @@ parameters  {
   
   vector<lower=0>[N] y_init;
   vector<lower=0>[N] beta;
-  vector<lower=0>[N] t_init;
+  vector<lower=11048>[N] t_init;
 }
 
 transformed parameters {
